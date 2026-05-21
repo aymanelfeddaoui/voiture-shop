@@ -2,9 +2,9 @@ package org.cours.web;
 
 import lombok.RequiredArgsConstructor;
 import org.cours.dto.AiRequest;
-import org.springframework.ai.anthropic.AnthropicChatModel;
-import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +15,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AiController {
 
-    private final AnthropicChatModel chatModel;
+    private final ChatModel chatModel;
 
     @PostMapping("/chat")
     public ResponseEntity<Map<String, String>> chat(
             @RequestBody AiRequest request) {
         String response = chatModel.call(
             new Prompt(new UserMessage(request.getMessage()))
-        ).getResult().getOutput().getContent();
+        ).getResult().getOutput().getText(); 
         return ResponseEntity.ok(Map.of("response", response));
     }
 
